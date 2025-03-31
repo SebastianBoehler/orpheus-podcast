@@ -1,0 +1,9 @@
+torch>=2.0.0
+soundfile>=0.12.1
+numpy>=1.24.0
+snac>=0.1.0
+transformers>=4.30.0
+# The following packages are not required for simple_test.py
+# orpheus-speech>=0.1.0
+# vllm==0.7.3
+# threadingc is likely a typo in the original code, using standard threading module
