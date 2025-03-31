@@ -1,0 +1,1 @@
+export GEMINI_API_KEY="AIzaSyDVXw1wT0BEBCLuZu7MNBkYrVb5omtjkOc" && python gemini.py --topic "Future of AI Programming" --turns 12

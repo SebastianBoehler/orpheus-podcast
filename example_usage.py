@@ -31,7 +31,7 @@ def main():
     samples = generate_speech(
         prompts=prompts,
         output_dir="generated_audio/example1",
-        max_new_tokens=1200,
+        max_new_tokens=1500,
         temperature=0.6,
         repetition_penalty=1.1,
     )

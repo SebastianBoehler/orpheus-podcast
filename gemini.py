@@ -8,6 +8,7 @@ converts it to speech using the Orpheus TTS system.
 import os
 import json
 import argparse
+import re
 from typing import List, Dict, Any
 import numpy as np
 import soundfile as sf
@@ -17,7 +18,8 @@ from google.genai import types
 from orpheus import generate_speech
 
 # Available voices in Orpheus
-AVAILABLE_VOICES = ["tara", "leah", "jess", "leo", "dan", "mia", "zac", "zoe"]
+# ["tara", "leah", "jess", "leo", "dan", "mia", "zac", "zoe"]
+AVAILABLE_VOICES = ["tara", "leah", "zac", "leo", "jess"]
 # Available emotions
 EMOTIONS = [
     "<laugh>",
@@ -222,7 +224,24 @@ def combine_audio_files(output_dir: str, combined_filename: str = "podcast.wav")
         combined_filename: Filename for the combined podcast
     """
     # Get all WAV files in the directory
-    audio_files = sorted([f for f in os.listdir(output_dir) if f.endswith(".wav")])
+    audio_files = [
+        f
+        for f in os.listdir(output_dir)
+        if f.endswith(".wav") and f != combined_filename
+    ]
+
+    # Sort files numerically by extracting the number from the filename
+    def get_file_number(filename):
+        match = re.search(r"output_(\d+)\.wav", filename)
+        if match:
+            return int(match.group(1))
+        return 0
+
+    # Sort files by their numerical order
+    audio_files.sort(key=get_file_number)
+
+    # Print order for verification
+    print(f"Audio files in order: {audio_files}")
 
     if not audio_files:
         print("No audio files found to combine")
@@ -233,13 +252,16 @@ def combine_audio_files(output_dir: str, combined_filename: str = "podcast.wav")
 
     # Read all audio files
     audio_segments = []
+    samplerate = None
     for audio_file in audio_files:
         file_path = os.path.join(output_dir, audio_file)
-        data, samplerate = sf.read(file_path)
+        data, file_samplerate = sf.read(file_path)
         audio_segments.append(data)
+        if samplerate is None:
+            samplerate = file_samplerate
 
-    # Create a small pause (0.3 seconds of silence)
-    pause_duration = int(0.3 * samplerate)
+    # Create a small pause (0.2 seconds of silence)
+    pause_duration = int(0.2 * samplerate)
     pause = np.zeros(pause_duration)
 
     # Combine all segments with pauses in between
