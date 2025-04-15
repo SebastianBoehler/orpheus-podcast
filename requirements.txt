@@ -4,6 +4,7 @@ numpy>=1.24.0
 snac>=0.1.0
 transformers>=4.30.0
 google-genai>=0.1.0
+python-dotenv>=1.0.0
 # The following packages are not required for simple_test.py
 # orpheus-speech>=0.1.0
 # vllm==0.7.3

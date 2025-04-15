@@ -2,3 +2,4 @@
 venv
 generated_audio
 __pycache__
+.env
