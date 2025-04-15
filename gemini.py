@@ -57,11 +57,12 @@ def generate_podcast_script(
         "DO NOT use emotions or tags like <laugh>. "
         "Make use of punctuation and sentence structure. "
         "Use ... to add a pause. "
-        "Keep each turn reasonably short (1-3 sentences) for better audio flow. ",
-        "To make it even more natural use some dialect, slang or regional expression now and then. ",
+        "Keep each turn reasonably short (1-3 sentences) due to tts limitations. "
+        "to make on person speak longer chain turns of the same person"
+        "To make it even more natural use some dialect, slang or regional expression now and then. "
         "Feel free to use multiple characters to create an engaging podcast."
-        "Voices go different well with another, so here are good combinations: ",
-        "Zac and tara, jess and lea",
+        "Voices go different well with another, so here are good combinations: "
+        "Zac with tara, jess with lea"
     )
     contents = [
         types.Content(
