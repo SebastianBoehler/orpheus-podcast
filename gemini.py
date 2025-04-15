@@ -12,6 +12,7 @@ from google.genai import types
 from pydantic import BaseModel
 
 # Only export Gemini logic from this module
+VOICES = ["tara", "leah", "zac", "leo", "jess"]
 
 
 class SpeakerTurn(BaseModel):
@@ -52,12 +53,15 @@ def generate_podcast_script(
     system_instruction = (
         "You are a professional audio engineer and podcast creator. "
         "Create a natural-sounding conversation. Use hooks and rhetorical questions to keep the audience engaged. "
-        "You can use any of these available voices: tara, leah, zac, leo, jess. "
+        f"You can use any of these available voices: {', '.join(VOICES)}. "
         "DO NOT use emotions or tags like <laugh>. "
         "Make use of punctuation and sentence structure. "
         "Use ... to add a pause. "
-        "Keep each turn reasonably short (1-3 sentences) for better audio flow. "
+        "Keep each turn reasonably short (1-3 sentences) for better audio flow. ",
+        "To make it even more natural use some dialect, slang or regional expression now and then. ",
         "Feel free to use multiple characters to create an engaging podcast."
+        "Voices go different well with another, so here are good combinations: ",
+        "Zac and tara, jess and lea",
     )
     contents = [
         types.Content(

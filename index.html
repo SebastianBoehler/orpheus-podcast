@@ -10,7 +10,7 @@
     .container {
       max-width: 620px;
       margin: 2.5rem auto;
-      background: #f7f8fa;
+      /*background: #f7f8fa;*/
       border-radius: 18px;
       padding: 2.2rem 1.7rem 2rem 1.7rem;
       box-shadow: none;
@@ -46,9 +46,14 @@
 
     <div class="section">
       <h2>Live Example Output</h2>
+      <div><b>English</b></div>
       <audio controls>
-        <source src="examples/english.mp4" type="video/mp4">
         <source src="examples/english.wav" type="audio/wav">
+        Your browser does not support the audio element.
+      </audio>
+      <div><b>German</b></div>
+      <audio controls>
+        <source src="examples/german.wav" type="audio/wav">
         Your browser does not support the audio element.
       </audio>
     </div>
