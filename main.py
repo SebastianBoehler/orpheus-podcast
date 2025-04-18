@@ -10,7 +10,7 @@ load_dotenv()
 
 import argparse
 from gemini import setup_gemini_client, generate_podcast_script
-from orpheus import generate_speech
+from orpheus import generate_speech, LANG_TO_MODEL
 from utils import combine_audio_files
 
 
@@ -27,6 +27,7 @@ def main():
         default="generated_audio/podcast",
     )
     parser.add_argument("--language", type=str, default=os.environ.get("PODCAST_LANGUAGE", "english"), help="Language for the podcast script")
+    parser.add_argument("--model-type", type=str, default=os.environ.get("PODCAST_MODEL_TYPE", "pretrained"), help="Model type for Orpheus TTS")
     args = parser.parse_args()
 
     # Set up Gemini client
@@ -47,27 +48,11 @@ def main():
     # Prepare prompts for Orpheus TTS
     prompts = [f"{item.name}: {item.text}" for item in script]
 
-    # Determine Orpheus model based on language
-    LANG_TO_MODEL = {
-        "english": "canopylabs/orpheus-3b-0.1-ft",
-        "en": "canopylabs/orpheus-3b-0.1-ft",
-        "german": "canopylabs/3b-de-ft-research_release",
-        "de": "canopylabs/3b-de-ft-research_release",
-        "french": "canopylabs/3b-fr-ft-research_release",
-        "fr": "canopylabs/3b-fr-ft-research_release",
-        "spanish": "canopylabs/3b-es_it-ft-research_release",
-        "es": "canopylabs/3b-es_it-ft-research_release",
-        "italian": "canopylabs/3b-es_it-ft-research_release",
-        "it": "canopylabs/3b-es_it-ft-research_release",
-        "korean": "canopylabs/3b-ko-ft-research_release",
-        "ko": "canopylabs/3b-ko-ft-research_release",
-        "hindi": "canopylabs/3b-hi-ft-research_release",
-        "hi": "canopylabs/3b-hi-ft-research_release",
-        "chinese": "canopylabs/3b-zh-ft-research_release",
-        "zh": "canopylabs/3b-zh-ft-research_release",
-    }
+    # Determine Orpheus model based on language and user preference (default: pretrained)
     language = args.language.strip().lower()
-    model_name = LANG_TO_MODEL.get(language, "canopylabs/orpheus-3b-0.1-ft")
+    model_type = getattr(args, "model_type", "pretrained")  # expects 'pretrained' or 'finetuned'
+    language_models = LANG_TO_MODEL.get(language, LANG_TO_MODEL["english"])
+    model_name = language_models.get(model_type, language_models["pretrained"])
 
     # Generate audio for each prompt using orpheus
     generate_speech(

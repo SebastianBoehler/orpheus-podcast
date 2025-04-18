@@ -11,8 +11,19 @@ from google import genai
 from google.genai import types
 from pydantic import BaseModel
 
-# Only export Gemini logic from this module
-VOICES = ["tara", "leah", "zac", "leo", "jess"]
+# Quality-ordered voices per language for Orpheus TTS.
+# For English, voices are ordered by conversational realism (see Orpheus-TTS README).
+# For other languages, see: https://canopylabs.ai/releases/orpheus_can_speak_any_language#info
+VOICES = {
+    "english": ["tara", "leah", "jess", "leo", "dan", "mia", "zac", "zoe"],
+    "french": ["pierre", "amelie", "marie"],
+    "german": ["jana", "thomas", "max"],
+    "korean": ["유나", "준서"],
+    "hindi": ["ऋतिका"],  # more coming
+    "mandarin": ["长乐", "白芷"],
+    "spanish": ["javi", "sergio", "maria"],
+    "italian": ["pietro", "giulia", "carlo"],
+}
 
 
 class SpeakerTurn(BaseModel):
@@ -29,7 +40,11 @@ def setup_gemini_client():
 
 
 def generate_podcast_script(
-    client, topic: str = None, num_turns: int = 10, language: str = "english"
+    client,
+    topic: str = None,
+    num_turns: int = 10,
+    language: str = "english",
+    model_type: str = "pretrained",
 ):
     """
     Generate a podcast script using Gemini API.
@@ -38,12 +53,18 @@ def generate_podcast_script(
         client: Gemini API client
         topic: Optional topic for the podcast
         num_turns: Number of conversation turns to generate
-        language: Language for the podcast script
+        language: Language for the podcast script (must match a key in VOICES)
+        model_type: 'finetuned' or 'pretrained'. For pretrained, always use English voices.
 
     Returns:
         List of SpeakerTurn objects (name, text)
     """
     model = "gemini-2.5-pro-exp-03-25"
+    lang_key = language.lower()
+    if model_type == "finetuned":
+        voice_list = VOICES.get(lang_key, VOICES["english"])
+    else:
+        voice_list = VOICES["english"]
     user_prompt = f"""
     Language: {language} \n
     Create a podcast discussing {topic}.
@@ -53,16 +74,16 @@ def generate_podcast_script(
     system_instruction = (
         "You are a professional audio engineer and podcast creator. "
         "Create a natural-sounding conversation. Use hooks and rhetorical questions to keep the audience engaged. "
-        f"You can use any of these available voices: {', '.join(VOICES)}. "
+        f"You can use any of these available voices for {language}: {', '.join(voice_list)} ordered by conversational realism. "
+        "For the full list of voices in other languages, see https://canopylabs.ai/releases/orpheus_can_speak_any_language#info. "
         "DO NOT use emotions or tags like <laugh>. "
         "Make use of punctuation and sentence structure. "
         "Use ... to add a pause. "
         "Keep each turn reasonably short (1-3 sentences) due to tts limitations. "
-        "to make on person speak longer chain turns of the same person"
+        "To make one person speak longer, chain turns of the same person. "
         "To make it even more natural use some dialect, slang or regional expression now and then. "
-        "Feel free to use multiple characters to create an engaging podcast."
-        "Voices go different well with another, so here are good combinations: "
-        "Zac with tara, jess with lea"
+        "Feel free to use multiple characters to create an engaging podcast. "
+        "Voices go differently well with another, so here are good combinations for English: Zac with Tara, Jess with Leah. "
     )
     contents = [
         types.Content(
@@ -86,8 +107,6 @@ def generate_podcast_script(
     if hasattr(response, "parsed") and response.parsed:
         return response.parsed
     try:
-        import json
-
         return json.loads(response.text)
     except Exception as e:
         print(f"Error parsing Gemini response: {e}")

@@ -18,6 +18,29 @@ This project leverages [Canopy AI's Orpheus TTS](https://canopylabs.ai/model-rel
 
 > **Note:** This project uses the Orpheus TTS models from Canopy AI. You must respect and comply with the license terms and usage restrictions provided by Canopy Labs for the Orpheus models. See the [official release page](https://canopylabs.ai/model-releases) for details.
 
+## Model Selection: Finetuned vs Pretrained
+
+You can choose between **finetuned** and **pretrained** Orpheus TTS models for each language.
+
+- **Pretrained models are recommended for best quality** and are the default.
+- Finetuned models support language-specific voices.
+- Pretrained models use English voices for all languages, but produce more natural and high-quality speech.
+
+To select the model type, use the `--model-type` argument or set the `PODCAST_MODEL_TYPE` environment variable.
+
+Example:
+
+```sh
+python main.py --language german --model-type pretrained
+```
+
+or
+
+```sh
+export PODCAST_MODEL_TYPE=finetuned
+python main.py --language french
+```
+
 ## Usage
 
 1.  **Setup:** Ensure you have the required dependencies installed (see `requirements.txt`).

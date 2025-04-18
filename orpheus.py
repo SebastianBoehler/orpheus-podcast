@@ -11,6 +11,77 @@ import numpy as np
 import soundfile as sf
 from snac import SNAC
 
+# Language-to-model mapping for Orpheus TTS, supporting both finetuned and pretrained models.
+# Default to pretrained for best quality, as recommended in Orpheus documentation.
+LANG_TO_MODEL = {
+    "english": {
+        "finetuned": "canopylabs/orpheus-3b-0.1-ft",
+        "pretrained": "canopylabs/orpheus-3b-0.1-pretrained",
+    },
+    "en": {
+        "finetuned": "canopylabs/orpheus-3b-0.1-ft",
+        "pretrained": "canopylabs/orpheus-3b-0.1-pretrained",
+    },
+    "german": {
+        "finetuned": "canopylabs/3b-de-ft-research_release",
+        "pretrained": "canopylabs/3b-de-pretrain-research_release",
+    },
+    "de": {
+        "finetuned": "canopylabs/3b-de-ft-research_release",
+        "pretrained": "canopylabs/3b-de-pretrain-research_release",
+    },
+    "french": {
+        "finetuned": "canopylabs/3b-fr-ft-research_release",
+        "pretrained": "canopylabs/3b-fr-pretrain-research_release",
+    },
+    "fr": {
+        "finetuned": "canopylabs/3b-fr-ft-research_release",
+        "pretrained": "canopylabs/3b-fr-pretrain-research_release",
+    },
+    "spanish": {
+        "finetuned": "canopylabs/3b-es_it-ft-research_release",
+        "pretrained": "canopylabs/3b-es_it-pretrain-research_release",
+    },
+    "es": {
+        "finetuned": "canopylabs/3b-es_it-ft-research_release",
+        "pretrained": "canopylabs/3b-es_it-pretrain-research_release",
+    },
+    "italian": {
+        "finetuned": "canopylabs/3b-es_it-ft-research_release",
+        "pretrained": "canopylabs/3b-es_it-pretrain-research_release",
+    },
+    "it": {
+        "finetuned": "canopylabs/3b-es_it-ft-research_release",
+        "pretrained": "canopylabs/3b-es_it-pretrain-research_release",
+    },
+    "korean": {
+        "finetuned": "canopylabs/3b-ko-ft-research_release",
+        "pretrained": "canopylabs/3b-ko-pretrain-research_release",
+    },
+    "ko": {
+        "finetuned": "canopylabs/3b-ko-ft-research_release",
+        "pretrained": "canopylabs/3b-ko-pretrain-research_release",
+    },
+    "hindi": {
+        "finetuned": "canopylabs/3b-hi-ft-research_release",
+        "pretrained": "canopylabs/3b-hi-pretrain-research_release",
+    },
+    "hi": {
+        "finetuned": "canopylabs/3b-hi-ft-research_release",
+        "pretrained": "canopylabs/3b-hi-pretrain-research_release",
+    },
+    "chinese": {
+        "finetuned": "canopylabs/3b-zh-ft-research_release",
+        "pretrained": "canopylabs/3b-zh-pretrain-research_release",
+    },
+    "zh": {
+        "finetuned": "canopylabs/3b-zh-ft-research_release",
+        "pretrained": "canopylabs/3b-zh-pretrain-research_release",
+    },
+}
+
+# Export for use in main.py and other modules
+__all__ = ["OrpheusTTS", "generate_speech", "LANG_TO_MODEL"]
 
 class OrpheusTTS:
     """
