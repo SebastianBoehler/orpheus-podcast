@@ -106,7 +106,12 @@ class OrpheusTTS:
             model_name, torch_dtype=torch.bfloat16
         )
         self.model = self.model.to(device)
-        self.tokenizer = AutoTokenizer.from_pretrained(model_name)
+        # Use the English pretrained tokenizer for all pretrained models (per Orpheus convention)
+        if "pretrain" in model_name:
+            tokenizer_name = "canopylabs/orpheus-3b-0.1-pretrained"
+        else:
+            tokenizer_name = model_name
+        self.tokenizer = AutoTokenizer.from_pretrained(tokenizer_name)
         self.device = device
 
     def generate_speech(

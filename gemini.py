@@ -44,7 +44,7 @@ def generate_podcast_script(
     topic: str = None,
     num_turns: int = 10,
     language: str = "english",
-    model_type: str = "pretrained",
+    model_type: str = "finetuned",
 ):
     """
     Generate a podcast script using Gemini API.

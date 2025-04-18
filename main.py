@@ -27,7 +27,7 @@ def main():
         default="generated_audio/podcast",
     )
     parser.add_argument("--language", type=str, default=os.environ.get("PODCAST_LANGUAGE", "english"), help="Language for the podcast script")
-    parser.add_argument("--model-type", type=str, default=os.environ.get("PODCAST_MODEL_TYPE", "pretrained"), help="Model type for Orpheus TTS")
+    parser.add_argument("--model-type", type=str, default=os.environ.get("PODCAST_MODEL_TYPE", "finetuned"), help="Model type for Orpheus TTS")
     args = parser.parse_args()
 
     # Set up Gemini client
@@ -50,7 +50,7 @@ def main():
 
     # Determine Orpheus model based on language and user preference (default: pretrained)
     language = args.language.strip().lower()
-    model_type = getattr(args, "model_type", "pretrained")  # expects 'pretrained' or 'finetuned'
+    model_type = getattr(args, "model_type", "finetuned")  # expects 'pretrained' or 'finetuned'
     language_models = LANG_TO_MODEL.get(language, LANG_TO_MODEL["english"])
     model_name = language_models.get(model_type, language_models["pretrained"])
 
